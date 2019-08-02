@@ -1,0 +1,21 @@
+# This is the ffmpeg commands taken from `jsmpeg` readme
+
+# no audio
+ffmpeg \
+	-f v4l2 \
+		-framerate 25 -video_size 640x480 -i /dev/video0 \
+	-f mpegts \
+		-codec:v mpeg1video -s 640x480 -b:v 1000k -bf 0 \
+	http://localhost:8081/supersecret
+
+# audio
+ffmpeg \
+	-f v4l2 \
+		-framerate 25 -video_size 640x480 -i /dev/video0 \
+	-f alsa \
+		-ar 44100 -c 2 -i hw:0 \
+	-f mpegts \
+		-codec:v mpeg1video -s 640x480 -b:v 1000k -bf 0 \
+		-codec:a mp2 -b:a 128k \
+		-muxdelay 0.001 \
+	http://localhost:8081/supersecret
